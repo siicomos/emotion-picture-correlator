@@ -37,7 +37,7 @@ async def predict_emotion(request: Request, uploadFile: UploadFile = File(...)):
     logger.debug(f"File created: {path_to_temp_img}")
 
     # run the OpenFace command
-    cmd = f"{config.openface_bin}/FaceLandmarkImg -f {path_to_temp_img} -out_dir {result_folder}"
+    cmd = f"{config.openface_bin}/FaceLandmarkImg -f {path_to_temp_img} -out_dir {result_folder} -mloc {config.openface_model_1}"
     Executor.run(cmd, verbose=True)
 
     # 

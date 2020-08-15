@@ -36,6 +36,9 @@ RUN cmake .. \
     && make install \
     && ldconfig
 
+# optional install boost
+RUN apt-get install -y libboost-all-dev
+
 # download models
 COPY scripts/download_models.sh /opencv-4.1.0/download_models.sh
 RUN chmod +x /opencv-4.1.0/download_models.sh \

@@ -36,7 +36,12 @@ RUN cmake .. \
     && make install \
     && ldconfig
 
-# install openface
+# download models
+COPY scripts/download_models.sh /opencv-4.1.0/download_models.sh
+RUN chmod +x /opencv-4.1.0/download_models.sh \
+    && /opencv-4.1.0/download_models.sh
+
+# install OpenFace
 ENV OPENFACE_BUILD=/OpenFace/build
 ENV OPENFACE_BIN=/OpenFace/build/bin
 
@@ -51,10 +56,16 @@ WORKDIR /
 RUN rm 4.1.0.zip \
     && rm dlib-19.13.tar.bz2
 
-# copy api code
+# install API dependencies
 WORKDIR /model_1
-COPY . /model_1
+COPY requirements.txt /model_1/requirements.txt
 RUN pip install -r requirements.txt
+
+# copy API code
+COPY . /model_1
+
+# API log level
+ENV LOG_LEVEL=DEBUG
 
 ENTRYPOINT [ ]
 CMD uvicorn src.app:app --host 0.0.0.0 --port 8080

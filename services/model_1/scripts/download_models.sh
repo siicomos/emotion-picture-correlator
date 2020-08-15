@@ -1,6 +1,7 @@
 #!/bin/bash
 
-models_path=lib/local/LandmarkDetector/model/patch_experts
+models_path=${OPENFACE_ROOT}/lib/local/LandmarkDetector/model/patch_experts
+echo "OpenFace model path: ${models_path}"
 mkdir -p ${models_path}
 
 path=${models_path}/cen_patches_0.25_of.dat

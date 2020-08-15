@@ -39,17 +39,21 @@ RUN cmake .. \
 # optional install boost
 RUN apt-get install -y libboost-all-dev
 
-# download models
-COPY scripts/download_models.sh /opencv-4.1.0/download_models.sh
-RUN chmod +x /opencv-4.1.0/download_models.sh \
-    && /opencv-4.1.0/download_models.sh
-
-# install OpenFace
+## OpenFace install
+ENV OPENFACE_ROOT=/OpenFace
 ENV OPENFACE_BUILD=/OpenFace/build
 ENV OPENFACE_BIN=/OpenFace/build/bin
 
+# install OpenFace
 WORKDIR /
 RUN git clone https://github.com/TadasBaltrusaitis/OpenFace.git
+
+# download models
+WORKDIR /OpenFace
+COPY scripts/download_models.sh /opencv-4.1.0/download_models.sh
+RUN chmod +x /opencv-4.1.0/download_models.sh \
+    && /opencv-4.1.0/download_models.sh
+    
 WORKDIR ${OPENFACE_BUILD}
 RUN cmake -D CMAKE_CXX_COMPILER=g++-8 -D CMAKE_C_COMPILER=gcc-8 -D CMAKE_BUILD_TYPE=RELEASE .. \
     && make

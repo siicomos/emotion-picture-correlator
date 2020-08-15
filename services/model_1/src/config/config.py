@@ -11,5 +11,6 @@
 import os
 from pathlib import Path
 
+log_level = os.environ.get("LOG_LEVEL", "INFO")
 predict_result_temp_folder = Path(os.environ.get("PREDICT_RESULT_TEMP_FOLDER", "/tmp/result"))
 openface_bin = Path(os.environ.get("OPENFACE_BIN", "/OpenFace/build/bin"))

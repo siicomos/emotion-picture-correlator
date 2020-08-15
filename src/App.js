@@ -10,20 +10,23 @@ import Home from './pages/home-page/Home';
 import About from './pages/about-page/About';
 import EmotionCap from './pages/emotionCap-page/emotionCap';
 import TestImage from './testImage';
+import Navbar from './pages/home-page/Navbar';
+import './App.css';
 
 class App extends React.Component{
   render(){
     return (
-      <React.Fragment>
-        <Router>
-          <Switch>
-            <Route exact path='/' component={Home}/>
-            <Route path='/about' component={About}/>
-            <Route path='/webcam' component={EmotionCap}/>
-            <Route path='/testImage' component={TestImage}/>
-          </Switch>
-        </Router>
-      </React.Fragment>
+      <div id='app-id'>
+        <React.Fragment>
+          <Router>
+            <Navbar/>
+              <Route exact path='/' component={Home}/>
+              <Route path='/about' component={About}/>
+              <Route path='/webcam' component={EmotionCap}/>
+              <Route path='/testImage' component={TestImage}/>
+          </Router>
+        </React.Fragment>
+      </div>
     );
   }
 }

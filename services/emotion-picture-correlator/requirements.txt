@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+requests
+python-multipart
+pandas
+scikit-learn==0.23.2

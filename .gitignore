@@ -1,2 +1,14 @@
 # mongo volume
 mongo-volume/
+
+# pycache
+__pycache__
+
+# datasets
+datasets/
+
+# jupyter-notebook checkpoints
+.ipynb_checkpoints/
+
+# scraper api key
+secret.env

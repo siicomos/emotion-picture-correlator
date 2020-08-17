@@ -1,0 +1,12 @@
+version: "3"
+services: 
+    openface:
+        build: 
+            context: .
+            dockerfile: Dockerfile
+        env_file: 
+            - secret.env
+        image: emotional-correlator
+        container_name: "emotional-correlator"
+        ports:
+            - "8080:8080"

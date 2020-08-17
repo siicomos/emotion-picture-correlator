@@ -254,6 +254,9 @@ async def predict_emotion(request: Request, uploadFile: UploadFile = File(...)):
         else:
             logger.debug(f"Temp folder for the model 2 result remove failed: {result_folder}")
     
+    # re-arrange the response list
+    response_content.sort(key=lambda x: x["confidence"])
+
     response_content.append({"emotion":model_2_clf_target_emotion})
 
     return JSONResponse(

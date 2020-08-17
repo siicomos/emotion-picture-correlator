@@ -24,8 +24,8 @@ class EmotionCap extends Component{
         img.append("uploadFile", new Blob([buff], {type: 'application/octet-stream'}), 'image.jpeg');
         // console.log(typeof(this.state.screenshot))
         axios
-        .post("http://localhost:8080/predict", img)
-        .then(function(res){
+        .post("http://127.0.1.1:8080/predict/", img)
+        .then(res => {
             console.log(res.data);
             this.setState({
                 resImg: res.data
@@ -60,9 +60,9 @@ class EmotionCap extends Component{
                 )}
                 {
                     this.state.resImg &&
-                    this.state.resImg.map(eachImage => {
+                    this.state.resImg.map((eachImage, i) => {
                         return (
-                            <img src={eachImage.url_image} alt="image"/>
+                            <img src={eachImage.image_url} alt="image" key={i}/>
                         )
                     })
                 }

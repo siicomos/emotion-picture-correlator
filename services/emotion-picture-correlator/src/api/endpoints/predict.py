@@ -14,12 +14,14 @@ from datetime import datetime
 
 import numpy as np
 import pandas as pd
-from fastapi import APIRouter, File, Request, UploadFile
+from fastapi import APIRouter, File, Request, UploadFile, HTTPException
 from joblib import load
 
 from ...config import config
 from ...helpers import fileManager
 from ...helpers.executor import Executor
+from ...scrapper.scrapper import GIFGIFMatrixSearch
+from ...mappings import scraper_mapping, svm_faces_aur_clf_mapping
 
 logger = logging.getLogger(__name__)
 
@@ -38,12 +40,30 @@ async def predict_emotion(request: Request, uploadFile: UploadFile = File(...)):
     # write to temp img file
     path_to_temp_img = fileManager.join_path(result_folder, temp_img)
     with open(path_to_temp_img, "wb") as f:
-        f.write(content)
+        try:
+            f.write(content)
+        except Exception as e:
+            logger.debug("Fail to save the incoming file")
+            raise HTTPException(
+            status_code=500,
+            detail="Internal server error"
+        )
+
     logger.debug(f"File created: {path_to_temp_img}")
 
     # run the OpenFace command
     cmd = f"{config.openface_bin}/FaceLandmarkImg -f {path_to_temp_img} -out_dir {result_folder} -mloc {config.openface_model_1}"
-    Executor.run(cmd, verbose=True)
+    if config.log_level == "DEBUG":
+        verbose = False
+    else:
+        verbose = True
+    returncode, stdout, stderr = Executor.run(cmd, verbose=verbose)
+    if returncode != 0:
+        logger.debug("Fail to execute OpenFace against the incoming file")
+        raise HTTPException(
+            status_code=500,
+            detail="Internal server error"
+        )
 
     # get the AUs (AU_r and AU_c) data
     csv_file = f"{result_folder.resolve()}/{fileManager.get_stem(temp_img)}.csv"
@@ -87,5 +107,35 @@ async def predict_emotion(request: Request, uploadFile: UploadFile = File(...)):
     logger.debug(f"Predicted emotion: {model_1_clf_pred_result} confidence: {model_1_clf_pred_prob[np.where(model_1_clf_classes == model_1_clf_pred_result)]}")
     logger.debug(f"Prediction confidence matrix:\n{dict(zip(model_1_clf_classes, model_1_clf_pred_prob))}")
 
+    # remove the temp folder
+    if fileManager.delete_path(result_folder):
+        logger.debug(f"Temp folder for the model 1 result successfully removed: {result_folder}")
+    else:
+        logger.debug(f"Temp folder for the model 1 result remove failed: {result_folder}")
+
+    # tranlate the mapping from model 1 to gif scraper mapping
+    model_1_clf_pred_result_indicator = list(svm_faces_aur_clf_mapping.mapping.keys())[
+        list(svm_faces_aur_clf_mapping.mapping.values()).index(model_1_clf_pred_result)
+    ]
+
     # gif scraper
-    
+    gifgif_emotion_keyword = scraper_mapping.mapping.get(model_1_clf_pred_result_indicator)
+    if gifgif_emotion_keyword:
+        try:
+            list_gifgif_url = GIFGIFMatrixSearch(emotionsingel=gifgif_emotion_keyword, variable=0.65)
+        except Exception as e:
+            logger.debug("Fail to retrive url from GIFGIF")
+            raise HTTPException(
+                status_code=500,
+                detail="Internal server error"
+            )
+    else:
+        logger.debug("Fail to map the model 1 emotion keyword to GIFGIF search keyword")
+        raise HTTPException(
+            status_code=500,
+            detail="Internal server error"
+        )
+        
+    logger.debug(f"List of GIFGIF url:\n{list_gifgif_url}")
+
+    # load the model 2 PCA and clf

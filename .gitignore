@@ -12,3 +12,6 @@ datasets/
 
 # scraper api key
 secret.env
+
+# node module
+node_modules/

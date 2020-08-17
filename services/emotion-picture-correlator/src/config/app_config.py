@@ -19,12 +19,10 @@ class Settings(BaseSettings):
     DEBUG = False
 
     # API metadata
-    API_TITLE = "Model-1 API"
-    API_DESCRIPTION = """Detect and process human face with emotion and report the emotion"""
+    API_TITLE = "Emotiona-Picture-Correlator API"
+    API_DESCRIPTION = """Detect and process human face with emotion and process the emotion to find the relevant GIFs"""
     API_VERSION = "1.0"
-    # Prefix for URL endpoints (not used currently)
-    # API_V1_STR = '/api/v1'
-
+    
     # CORS settings - allow all currently
     BACKEND_CORS_ORIGINS = ["*"]
 

@@ -62,7 +62,7 @@ async def predict_emotion(request: Request, uploadFile: UploadFile = File(...)):
         verbose = True
     returncode, stdout, stderr = Executor.run(cmd, verbose=verbose)
     if returncode != 0:
-        logger.debug("Fail to execute OpenFace against the incoming file")
+        logger.debug(f"Fail to execute OpenFace against the incoming file:\n{stdout}")
         raise HTTPException(
             status_code=500,
             detail="Internal server error"
@@ -162,11 +162,11 @@ async def predict_emotion(request: Request, uploadFile: UploadFile = File(...)):
 
     # start collecting valid .gif
     count = 0
-    response_content = {}
+    response_content = []
 
     for url, download_result in dict_download_result.items():
-        # collect total 5 .gif
-        if count == 5:
+        # collect total 6 .gif files
+        if count == 6:
             break
 
         # run the OpenFace command
@@ -246,7 +246,7 @@ async def predict_emotion(request: Request, uploadFile: UploadFile = File(...)):
             logger.debug(f"Predicted emotion: {model_2_clf_target_emotion} confidence: {target_confidence}")
             logger.debug(f"Prediction confidence matrix:\n{model_2_clf_confi_matrix}")
             
-            response_content.update({url: target_confidence})
+            response_content.append({"image_url": url, "confidence": target_confidence})
 
         # remove the temp folder
         if fileManager.delete_path(result_folder):
@@ -254,7 +254,7 @@ async def predict_emotion(request: Request, uploadFile: UploadFile = File(...)):
         else:
             logger.debug(f"Temp folder for the model 2 result remove failed: {result_folder}")
     
-    response_content.update({"emotion":model_2_clf_target_emotion})
+    response_content.append({"emotion":model_2_clf_target_emotion})
 
     return JSONResponse(
         status_code=200,

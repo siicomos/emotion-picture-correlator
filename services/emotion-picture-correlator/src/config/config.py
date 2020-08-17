@@ -31,4 +31,4 @@ scraper_api_key = os.environ.get("SCRAPER_API_KEY", "")
 scraper_api_endpoint_metrics='https://www.qnt.io/api/displaymetrics'
 scraper_api_endpoint_results='https://www.qnt.io/api/results'
 scraper_temp_folder = Path(os.environ.get("SCRAPER_TEMP_FOLDER", "/tmp/scraper"))
-scraping_limit = 10
+scraping_limit = 12

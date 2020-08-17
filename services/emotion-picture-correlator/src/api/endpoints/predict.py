@@ -165,8 +165,8 @@ async def predict_emotion(request: Request, uploadFile: UploadFile = File(...)):
     response_content = []
 
     for url, download_result in dict_download_result.items():
-        # collect total 5 .gif
-        if count == 5:
+        # collect total 6 .gif files
+        if count == 6:
             break
 
         # run the OpenFace command

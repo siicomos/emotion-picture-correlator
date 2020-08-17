@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Webcam from "react-webcam";
 import './emotionCap.css';
 import axios from "axios";
+import ReactLoading from 'react-loading';
 import testimg from '../../images/test.png';
 
 
@@ -10,7 +11,8 @@ class EmotionCap extends Component{
         super(props);
         this.state = {
             screenshot: null,
-            resImg: null
+            resImg: null,
+            loading: false
         }
     }
     capture() {
@@ -28,7 +30,8 @@ class EmotionCap extends Component{
         .then(res => {
             console.log(res.data);
             this.setState({
-                resImg: res.data
+                resImg: res.data,
+                loading: false
             })
         })
         .catch(function(err){
@@ -54,8 +57,12 @@ class EmotionCap extends Component{
                     />
                 )}
                 {this.state.screenshot && (
-                    <button onClick={this.handleSubmit.bind(this)}>
-                        Explore
+                    <button onClick={()=> { this.setState({loading: true});this.handleSubmit.bind(this)}}>
+                    {
+                        !this.state.loading ?
+                        "Explore" :
+                        <ReactLoading type={"bubbles"} height={100} width={100} color={'black'}/>
+                    }
                     </button>
                 )}
                 {

@@ -3,3 +3,34 @@ video,
 button {
     display: block;
 }
+
+div p{
+    margin-left: 1%;
+    margin-right: auto;
+}
+#webcam{
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+}
+#tmp_screenshot{
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+}
+.webcam-btn{
+    margin-bottom: 20px;
+}
+.output-img{
+    margin-left: auto;
+    margin-right: auto;
+}
+.output-img{
+    float: left;
+    width: 31%;
+    height: 250px;
+    margin-right: 1%;
+    margin-left: 1%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+}

@@ -9,3 +9,6 @@ datasets/
 
 # jupyter-notebook checkpoints
 .ipynb_checkpoints/
+
+# scraper api key
+secret.env

@@ -18,7 +18,7 @@ def GIFGIFMatrixSearch(emotionsingel,variable):
 #     mode=random
     query = '?pID=gifgif&mode=all&key={key}'.format(key=API_KEY)
     url = urllib.parse.urljoin(API_ENDPOINT_METRICS, query)
-    lmt = 5
+    lmt = config.scraping_limit
     
     response = requests.get(url)
     response.raise_for_status()
@@ -40,6 +40,6 @@ def GIFGIFMatrixSearch(emotionsingel,variable):
     for i in range(len(gifs_result['results'])):
         url = gifs_result['results'][i]['content_data']['embedLink']#[0]['gif']['url'] #This is the url from json.
         # print (url)
-        urllib.request.urlretrieve(url, 'GIFGIFS'+str(i)+'.gif') #Downloads the gif file.
+        # urllib.request.urlretrieve(url, 'GIFGIFS'+str(i)+'.gif') #Downloads the gif file.
         display_url_list.append(url)
     return display_url_list

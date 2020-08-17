@@ -8,6 +8,8 @@
 """Main application
 """
 
+import logging
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -18,6 +20,7 @@ from .logger.logger import Logger
 
 Logger(level=config.log_level)
 
+logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title=settings.API_TITLE,
@@ -38,3 +41,10 @@ if settings.BACKEND_CORS_ORIGINS:
     )
 
 app.include_router(api_router)
+
+if config.model_1_pca == "" or config.model_1_clf == "":
+    logger.error("Model 1 PCA or CLF missing")
+    raise RuntimeError("Fail to start application")
+if config.model_2_pca == "" or config.model_2_clf == "":
+    logger.error("Model 2 PCA or CLF missing")
+    raise RuntimeError("Fail to start application")

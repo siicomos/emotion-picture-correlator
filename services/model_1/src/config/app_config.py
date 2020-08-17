@@ -10,7 +10,7 @@
 
 from typing import List
 
-from pydantic import AnyHttpUrl, BaseSettings
+from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
@@ -26,6 +26,8 @@ class Settings(BaseSettings):
     # API_V1_STR = '/api/v1'
 
     # CORS settings - allow all currently
-    BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = []
+    BACKEND_CORS_ORIGINS: [
+        "http://localhost:3000"
+    ]
 
 settings = Settings()

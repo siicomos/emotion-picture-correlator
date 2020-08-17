@@ -76,6 +76,8 @@ ENV LOG_LEVEL=DEBUG
 # model 1 classifier
 ENV MODEL_1_PCA=pca_faces_aur.pkl
 ENV MODEL_1_CLF=svm_faces_aur_clf.joblib
+ENV MODEL_2_PCA=pca_gifgif_aur100.pkl
+ENV MODEL_2_CLF=svm_gifgif_aur_clf100.joblib
 
 ENTRYPOINT [ ]
 CMD uvicorn src.app:app --host 0.0.0.0 --port 8080

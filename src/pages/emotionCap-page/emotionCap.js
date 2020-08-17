@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import Webcam from "react-webcam";
-import './emotionCap.css'
+import './emotionCap.css';
+import axios from "axios";
 import testimg from '../../images/test.png';
-
 
 class EmotionCap extends Component{
     constructor(props){
@@ -13,16 +13,22 @@ class EmotionCap extends Component{
         const screenshot = this.refs.webcamref.getScreenshot({width:480, height:360});
         this.setState({screenshot: screenshot});
     }
-    URLgenerator(){
-        // 把截屏存成url的方法：
-        // let image = new Blob([screenshot], {'type' : 'image/jpeg'});
-        // // document.getElementById('tmp_screenshot').src = window.URL.createObjectURL(image);
-        // var test = window.URL.createObjectURL(image);
-        // console.log(test)
-        var img = document.createElement('img');
-        img.src = testimg;
-        document.body.appendChild(img);
+    
+    handleSubmit(){
+        let img = new FormData()
+        img.append("uploadFile", new Blob([this.state.screenshot], {type: 'application/octet-stream'}), 'image.jpeg');
+        // console.log(typeof(this.state.screenshot))
+        axios
+        .post("http://localhost:8080/predict", img)
+        .then(function(res){
+            console.log(res.data);
+        })
+        .catch(function(err){
+            console.log(err);
+        })
+
     }
+    
     render(){
         return (
             <div>
@@ -40,7 +46,7 @@ class EmotionCap extends Component{
                     />
                 )}
                 {this.state.screenshot && (
-                    <button onClick={this.URLgenerator.bind(this)}>
+                    <button onClick={this.handleSubmit.bind(this)}>
                         Explore
                     </button>
                 )}

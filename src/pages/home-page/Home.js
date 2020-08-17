@@ -3,6 +3,7 @@ import Container from 'react-bootstrap/Container';
 import Image from 'react-bootstrap/Image';
 import { Row, Col } from 'react-bootstrap';
 import './Home.css';
+import ReactTypingEffect from 'react-typing-effect';
 
 class Home extends Component{
     render(){
@@ -51,6 +52,11 @@ class Home extends Component{
                                 height={230}
                                 rounded className='home-img'/>
                     </div>
+                </div>
+                <div className='home-con'>
+                        <ReactTypingEffect
+                                text="The world of Emojis and Memes is amazing!"
+                        />
                 </div>
             </body>
         );

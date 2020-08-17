@@ -3,6 +3,8 @@ import Webcam from "react-webcam";
 import './emotionCap.css';
 import axios from "axios";
 import ReactLoading from 'react-loading';
+import Button from 'react-bootstrap/Button';
+import Image from 'react-bootstrap/Image';
 import testimg from '../../images/test.png';
 
 
@@ -21,6 +23,7 @@ class EmotionCap extends Component{
     }
     
     handleSubmit(){
+        this.setState({loading: true});
         let img = new FormData()
         const buff = new Buffer(this.state.screenshot.split(",")[1], 'base64')
         img.append("uploadFile", new Blob([buff], {type: 'application/octet-stream'}), 'image.jpeg');
@@ -34,43 +37,82 @@ class EmotionCap extends Component{
                 loading: false
             })
         })
-        .catch(function(err){
-            console.log(err);
+        .catch(err => {
+            if(err.response) {
+                if(err.response.status == 406) {
+                    alert("There are no face in the image you taken")
+                } else if(err.response.status == 500) {
+                    alert("Server side error")
+                } else {
+                    console.log(err)
+                    alert("Server side error")
+                }
+            } else if (err.request) {
+                console.log(err)
+                alert("Server no response")
+            }
+            this.setState({
+                loading: false
+            })
         })
 
     }
     
     render(){
         return (
-            <div>
+            <div id='webcam-id'>
                 <p>Test in EmotionCap page</p>
-                <Webcam
+                <Webcam id='webcam'
                     audio = {false}
                     height = {360}
                     ref='webcamref'
                     screenshotFormat = "image/jpeg"
                 /> 
-                <button onClick={this.capture.bind(this)}>Take photo</button>
+                <div class='text-center'>
+                    <Button className="webcam-btn" variant="outline-secondary" onClick={this.capture.bind(this)}>Take photo</Button>
+                </div>
                 {this.state.screenshot && (
                     <img id="tmp_screenshot"
                         src = {this.state.screenshot}
                     />
                 )}
-                {this.state.screenshot && (
-                    <button onClick={()=> { this.setState({loading: true});this.handleSubmit.bind(this)}}>
+                <div class='text-center'>
+                    {this.state.screenshot && (
+                        <Button className="webcam-btn" variant="outline-secondary" onClick={this.handleSubmit.bind(this)}>
+                        {
+                            !this.state.loading ?
+                            "Explore" :
+                            <ReactLoading type={"bubbles"} height={100} width={100} color={'black'}/>
+                        }
+                        </Button>
+                    )}
+                </div>
+                <div class='text-center'>
                     {
-                        !this.state.loading ?
-                        "Explore" :
-                        <ReactLoading type={"bubbles"} height={100} width={100} color={'black'}/>
+                        this.state.resImg &&
+                        this.state.resImg.map((eachImage, i) => {
+                            if ("emotion" in eachImage) {
+                                return (
+                                    <text style={{textTransform: 'capitalize'}}>
+                                        Detect emotion: {eachImage.emotion}
+                                    </text>
+                                )
+                            }
+                        })
                     }
-                    </button>
-                )}
+                </div>
                 {
                     this.state.resImg &&
                     this.state.resImg.map((eachImage, i) => {
-                        return (
-                            <img src={eachImage.image_url} alt="image" key={i}/>
-                        )
+                        if ("image_url" in eachImage) {
+                            return (
+                                <Image className="output-img"
+                                        width={380}
+                                        height={230}
+                                        rounded
+                                        src={eachImage.image_url} alt="image" key={i}/>
+                            )
+                        }
                     })
                 }
             </div>

@@ -4,10 +4,14 @@ import './emotionCap.css';
 import axios from "axios";
 import testimg from '../../images/test.png';
 
+
 class EmotionCap extends Component{
     constructor(props){
         super(props);
-        this.state = {screenshot: null}
+        this.state = {
+            screenshot: null,
+            resImg: null
+        }
     }
     capture() {
         const screenshot = this.refs.webcamref.getScreenshot({width:480, height:360});
@@ -16,12 +20,16 @@ class EmotionCap extends Component{
     
     handleSubmit(){
         let img = new FormData()
-        img.append("uploadFile", new Blob([this.state.screenshot], {type: 'application/octet-stream'}), 'image.jpeg');
+        const buff = new Buffer(this.state.screenshot.split(",")[1], 'base64')
+        img.append("uploadFile", new Blob([buff], {type: 'application/octet-stream'}), 'image.jpeg');
         // console.log(typeof(this.state.screenshot))
         axios
         .post("http://localhost:8080/predict", img)
         .then(function(res){
             console.log(res.data);
+            this.setState({
+                resImg: res.data
+            })
         })
         .catch(function(err){
             console.log(err);
@@ -50,6 +58,14 @@ class EmotionCap extends Component{
                         Explore
                     </button>
                 )}
+                {
+                    this.state.resImg &&
+                    this.state.resImg.map(eachImage => {
+                        return (
+                            <img src={eachImage.url_image} alt="image"/>
+                        )
+                    })
+                }
             </div>
         );
     }

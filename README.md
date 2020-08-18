@@ -19,7 +19,7 @@ The intermediate process of detecting emotion and find the GIF is done in Machin
 - Frontend: `cd web/ && npm install && npm start`
 - Create a file `secret.env` at `services/emotion-picture-correlator` with [GIFGIF API Key](https://developers.giphy.com/docs/api/endpoint#search)
   - This file is required to let the backend has access to the GIFGIF API endpoint so that it can display GIFs to you.
-  - Run this command under `services/emotion-picture-correlator/`: `echo SCRAPER_API_KEY={your_api_key} > secret.env`
+  - Run this command under `services/emotion-picture-correlator/`: `echo 'SCRAPER_API_KEY={your_api_key}' > secret.env`
 - Backend: `cd services/emotion-picture-correlator/ && ./run_emotional_correlator.sh && docker logs -f emotional-correlator`
 
 Then, the webpage is available at `localhost:3030`

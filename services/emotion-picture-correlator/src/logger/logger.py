@@ -26,7 +26,7 @@ class Logger:
         self.self_logger = logging.getLogger(__name__)  # this is a myself logger
         self.logger_list = []
 
-        self.create_loggers(loggers)  # create logger for jsonparser and ffmpegslicer
+        self.create_loggers(loggers)  # create logger
         self.logging_level = logging.INFO
         if level.upper() != "DEFAULT":
             self.parse_logging_level(level)
